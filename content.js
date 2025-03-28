@@ -169,11 +169,39 @@ function checkAndBlockPost(postElement) {
 }
 
 function getPostAuthor(postElement) {
-    // Try to find the author name from various possible elements
-    const authorElement = postElement.querySelector('.update-components-actor__title span[dir="ltr"], .update-components-actor__name');
-    if (authorElement) {
-        return authorElement.textContent.trim();
+    // First try the most specific selector for the main author name
+    const mainAuthorElement = postElement.querySelector('.update-components-actor__title span[dir="ltr"] > span[aria-hidden="true"]');
+    if (mainAuthorElement) {
+        return mainAuthorElement.textContent.trim();
     }
+
+    // Fallback to other possible selectors if the main one isn't found
+    const fallbackElements = [
+        '.update-components-actor__title span[dir="ltr"]:first-child',
+        '.update-components-actor__name',
+        '.update-components-text__title'
+    ];
+
+    for (const selector of fallbackElements) {
+        const element = postElement.querySelector(selector);
+        if (element) {
+            // Clean up the text: remove duplicates and normalize spaces
+            const text = element.textContent.trim();
+            // Split by common separators and take the first part
+            const parts = text.split(/[•\-,]/)[0].trim();
+            // Remove any duplicate names (e.g., "John Smith John Smith" -> "John Smith")
+            const words = parts.split(/\s+/);
+            const uniqueWords = [];
+            for (let i = 0; i < words.length; i++) {
+                const remaining = words.slice(i).join(' ');
+                if (!uniqueWords.join(' ').includes(remaining)) {
+                    uniqueWords.push(words[i]);
+                }
+            }
+            return uniqueWords.join(' ');
+        }
+    }
+    
     return "Unknown Author";
 }
 
@@ -186,7 +214,7 @@ function blockPostElement(originalPostElement, reason) {
 
     // Hide the original post
     originalPostElement.style.display = 'none';
-    originalPostElement.classList.add('ln-funblock-hidden-original'); // Mark for potential unblocking
+    originalPostElement.classList.add('ln-funblock-hidden-original');
 
     // Create placeholder
     const placeholder = document.createElement('div');
@@ -194,8 +222,13 @@ function blockPostElement(originalPostElement, reason) {
 
     const message = document.createElement('p');
     const randomEmoji = ['🚧', '🧱', '🤫', '🥱', '🙈', '⏸️'][Math.floor(Math.random() * 6)];
-    // Remove the author name from the reason text since it's already in the "Post by" part
-    const cleanReason = reason.replace(/^Post by [^:]+: /, '');
+    
+    // Ensure the reason doesn't already contain the author name
+    let cleanReason = reason;
+    const authorPattern = new RegExp(`Post by ${author}[:\\s]+`, 'i');
+    cleanReason = cleanReason.replace(authorPattern, '');
+    cleanReason = cleanReason.replace(/^Post by [^:]+:\s*/, '');
+    
     message.textContent = `${randomEmoji} Post by ${author} blocked: ${cleanReason}`;
 
     const unblockButton = document.createElement('button');
