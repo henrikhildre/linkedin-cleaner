@@ -1,0 +1,24 @@
+{
+    "manifest_version": 3,
+    "name": "LinkedIn Feed Fun Blocker",
+    "version": "1.0",
+    "description": "Blocks long slideshows and excessive emoji bullet points in your LinkedIn feed.",
+    "permissions": [
+      "scripting", // Needed to inject content script
+      "storage" // To potentially save settings in the future (optional for now)
+    ],
+    "host_permissions": [
+      "https://www.linkedin.com/feed/*" // Allows scripting on the feed page
+    ],
+    "content_scripts": [
+      {
+        "matches": ["https://www.linkedin.com/feed/*"],
+        "js": ["content.js"],
+        "css": ["styles.css"], // Inject our CSS
+        "run_at": "document_idle" // Run after the page is mostly loaded
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    }
+}

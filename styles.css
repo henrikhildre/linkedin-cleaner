@@ -1,0 +1,41 @@
+.ln-funblock-placeholder {
+    border: 2px dashed #d3d3d3; /* Light grey dashed border */
+    background-color: #f8f8f8; /* Very light grey background */
+    padding: 20px;
+    margin-bottom: 8px; /* Match LinkedIn's feed gap */
+    border-radius: 8px; /* Match LinkedIn's card style */
+    text-align: center;
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Fira Sans', Ubuntu, Oxygen, 'Oxygen Sans', Cantarell, 'Droid Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Lucida Grande', Helvetica, Arial, sans-serif;
+    color: #555;
+  }
+  
+  .ln-funblock-placeholder p {
+      margin: 0 0 10px 0;
+      font-size: 1.1em;
+      font-weight: 500;
+  }
+  
+  .ln-funblock-unblock-button {
+    background-color: #e9e9e9;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 8px 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+  }
+  
+  .ln-funblock-unblock-button:hover {
+    background-color: #dcdcdc;
+  }
+  
+  /* This class is just a marker, doesn't need styles unless for debugging */
+  .ln-funblock-hidden-original {
+    /* display: none !important; */ /* Hiding is done via inline style in JS */
+  }
+  
+  /* Optional: Style for processed items if needed for debugging */
+  /* .ln-funblock-processed {
+      outline: 1px solid lightcoral;
+  } */
